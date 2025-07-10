@@ -31,14 +31,12 @@ grid.addEventListener("click", (event) => {
         button.id == "add"
     ) {
         const op = button.textContent.trim();
-
         if (displayText === "") {
             if (op === "-") {
                 display.textContent += op;
             }
             return;
         }
-
         if (op === "*") {
             if (lastChar === "*") {
                 if (secondLastChar === "*") {
@@ -61,16 +59,13 @@ grid.addEventListener("click", (event) => {
     } else {
         display.textContent += button.textContent.trim();
     }
-
     button.blur();
 });
 
 window.addEventListener("keydown", (event) => {
     const key = event.key;
-
     const displayText = display.textContent.trim();
     const operators = ["/", "*", "+", "-"];
-
     if (key >= "0" && key <= "9") {
         display.textContent += key;
     } else if (key === ".") {
@@ -83,10 +78,22 @@ window.addEventListener("keydown", (event) => {
             return;
         }
         const lastChar = displayText[displayText.length - 1];
-        if (operators.includes(lastChar)) {
-            display.textContent = displayText.slice(0, -1) + key;
+        if (key === "*") {
+            let starsCount = 0;
+            for (let i = displayText.length - 1; i >= 0; i--) {
+                if (displayText[i] === "*") starsCount++;
+                else break;
+            }
+
+            if (starsCount < 2) {
+                display.textContent += "*";
+            }
         } else {
-            display.textContent += key;
+            if (operators.includes(lastChar)) {
+                display.textContent = displayText.slice(0, -1) + key;
+            } else {
+                display.textContent += key;
+            }
         }
     } else if (key === "Enter" || key === "=") {
         try {
@@ -102,5 +109,5 @@ window.addEventListener("keydown", (event) => {
         res.textContent = "";
     }
 
-    button.blur();
+    event.target.blur();
 });
